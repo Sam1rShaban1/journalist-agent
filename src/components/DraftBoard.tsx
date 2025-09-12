@@ -52,7 +52,7 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
   return (
     <div className="flex-1 flex flex-col">
       {/* Draft Header */}
-      <div className="border-b border-border/50 px-6 py-4 bg-accent/30 rounded-t-2xl">
+      <div className="border-b border-border/50 px-4 py-3 bg-accent/30 rounded-t-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <FileText className="h-5 w-5 text-primary" />
@@ -82,7 +82,7 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
       </div>
 
       {/* Draft Content */}
-      <div className="flex-1 p-6">
+      <div className="flex-1 p-4 pb-20">
         {content ? (
           <div className="h-full p-6">
             <ScrollArea className="h-full">

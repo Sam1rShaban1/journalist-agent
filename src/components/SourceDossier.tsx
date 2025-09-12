@@ -82,7 +82,7 @@ export const SourceDossier = ({ sources, isOpen, onToggle }: SourceDossierProps)
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-border/50">
+      <div className="p-4 border-b border-border/50">
         <div className="flex items-center justify-between mb-2">
           <h2 className="font-semibold text-foreground flex items-center">
             <CheckCircle className="h-5 w-5 mr-2 text-primary" />
@@ -104,7 +104,7 @@ export const SourceDossier = ({ sources, isOpen, onToggle }: SourceDossierProps)
 
       {/* Sources List */}
       <ScrollArea className="flex-1">
-        <div className="p-6 space-y-4">
+        <div className="p-4 space-y-4">
           {sources.length > 0 ? (
             sources.map((source, index) => (
               <div

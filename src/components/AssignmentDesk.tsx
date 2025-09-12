@@ -28,9 +28,8 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
   ];
 
   return (
-    <div className="p-6">
-      <div className="px-6 py-4">
-        <form onSubmit={handleSubmit} className="flex items-center space-x-4">
+    <div className="p-4">
+      <form onSubmit={handleSubmit} className="flex items-center space-x-3">
           {/* Model Selector */}
           <div className="w-48">
             <Select value={selectedModel} onValueChange={setSelectedModel}>
@@ -77,7 +76,6 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
             )}
           </Button>
         </form>
-      </div>
     </div>
   );
 };

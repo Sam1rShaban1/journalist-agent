@@ -87,8 +87,8 @@ export const StoryFiles = ({ isOpen, onToggle }: StoryFilesProps) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-border/50">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-4 border-b border-border/50">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-foreground flex items-center">
             <Archive className="h-5 w-5 mr-2 text-primary" />
             Story Files
@@ -115,7 +115,7 @@ export const StoryFiles = ({ isOpen, onToggle }: StoryFilesProps) => {
 
       {/* Story List */}
       <ScrollArea className="flex-1">
-        <div className="p-6 space-y-3">
+        <div className="p-4 space-y-3">
           {filteredStories.map((story) => (
             <div
               key={story.id}

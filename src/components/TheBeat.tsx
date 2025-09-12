@@ -73,19 +73,9 @@ All claims in this article have been cross-referenced against multiple sources. 
   };
 
   return (
-    <div className="h-screen bg-gradient-subtle flex flex-col overflow-hidden p-6">
-      {/* Header */}
-      <header className="mb-6 flex items-center justify-center">
-        <div className="flex items-center space-x-4">
-          <h1 className="text-3xl font-bold bg-gradient-editorial bg-clip-text text-transparent">
-            The Beat
-          </h1>
-          <span className="text-sm text-newsroom-gray">AI-Powered Journalistic Workbench</span>
-        </div>
-      </header>
-
+    <div className="h-screen bg-gradient-subtle flex overflow-hidden p-4">
       {/* Main Layout */}
-      <div className="flex-1 flex gap-6 overflow-hidden">
+      <div className="flex-1 flex gap-4 overflow-hidden">
         {/* Left Sidebar - Story Files */}
         <div className={`${leftSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-500 ease-out overflow-hidden`}>
           <div className="h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm animate-fade-in">
@@ -96,15 +86,17 @@ All claims in this article have been cross-referenced against multiple sources. 
           </div>
         </div>
 
-        {/* Center - Draft Board with Bottom Bar */}
-        <div className="flex-1 flex flex-col gap-6">
-          <div className="flex-1 bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm overflow-hidden">
+        {/* Center - Draft Board with Floating Bottom Bar */}
+        <div className="flex-1 relative">
+          <div className="h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm overflow-hidden">
             <DraftBoard content={currentDraft} isProcessing={isProcessing} />
           </div>
           
-          {/* Bottom Bar positioned within center stage */}
-          <div className="bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm">
-            <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} />
+          {/* Floating Bottom Bar inside center stage */}
+          <div className="absolute bottom-4 left-4 right-4">
+            <div className="bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm">
+              <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} />
+            </div>
           </div>
         </div>
 
