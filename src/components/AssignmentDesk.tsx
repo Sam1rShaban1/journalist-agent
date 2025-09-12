@@ -28,15 +28,15 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
   ];
 
   return (
-    <div className="bg-background border-t border-border shadow-panel">
+    <div className="p-6">
       <div className="px-6 py-4">
         <form onSubmit={handleSubmit} className="flex items-center space-x-4">
           {/* Model Selector */}
           <div className="w-48">
             <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="bg-accent border-border">
-                <SelectValue />
-              </SelectTrigger>
+            <SelectTrigger className="bg-accent/30 border-border/50 rounded-xl">
+              <SelectValue />
+            </SelectTrigger>
               <SelectContent>
                 {models.map((model) => (
                   <SelectItem key={model.value} value={model.value}>
@@ -53,7 +53,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="What's the story you're breaking?"
-              className="bg-background border-border text-lg py-6 px-4 placeholder:text-newsroom-gray focus:border-primary transition-colors"
+              className="bg-accent/30 border-border/50 text-lg py-6 px-4 placeholder:text-newsroom-gray focus:border-primary transition-all duration-300 rounded-xl"
               disabled={isProcessing}
             />
           </div>
@@ -62,7 +62,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
           <Button
             type="submit"
             disabled={!query.trim() || isProcessing}
-            className="bg-gradient-editorial hover:shadow-editorial transition-all duration-300 px-8 py-6 text-base font-semibold"
+            className="bg-gradient-editorial hover:shadow-editorial transition-all duration-300 px-8 py-6 text-base font-semibold rounded-xl hover-scale"
           >
             {isProcessing ? (
               <>

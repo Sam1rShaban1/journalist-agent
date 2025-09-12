@@ -1,8 +1,14 @@
 import { useState } from 'react';
-import { Search, FileText, Clock, Star, Archive } from 'lucide-react';
+import { Search, FileText, Clock, Star, Archive, PanelLeftClose } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+
+interface StoryFilesProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
 
 interface Story {
   id: string;
@@ -48,7 +54,7 @@ const mockStories: Story[] = [
   },
 ];
 
-export const StoryFiles = () => {
+export const StoryFiles = ({ isOpen, onToggle }: StoryFilesProps) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStory, setSelectedStory] = useState<string | null>(null);
 
@@ -81,33 +87,43 @@ export const StoryFiles = () => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-border">
-        <h2 className="font-semibold text-foreground mb-3 flex items-center">
-          <Archive className="h-5 w-5 mr-2 text-primary" />
-          Story Files
-        </h2>
+      <div className="p-6 border-b border-border/50">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold text-foreground flex items-center">
+            <Archive className="h-5 w-5 mr-2 text-primary" />
+            Story Files
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="p-2 hover:bg-accent rounded-xl transition-all duration-200"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </Button>
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-newsroom-gray" />
           <Input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search stories..."
-            className="pl-10 bg-background border-border"
+            className="pl-10 bg-accent/30 border-border rounded-xl"
           />
         </div>
       </div>
 
       {/* Story List */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-2">
+        <div className="p-6 space-y-3">
           {filteredStories.map((story) => (
             <div
               key={story.id}
               onClick={() => setSelectedStory(story.id)}
-              className={`p-3 rounded-lg border cursor-pointer transition-all duration-200 hover:shadow-subtle ${
+              className={`p-4 rounded-xl border cursor-pointer transition-all duration-300 hover:shadow-subtle hover-scale ${
                 selectedStory === story.id
                   ? 'border-primary bg-primary/5 shadow-subtle'
-                  : 'border-border bg-background hover:bg-accent/50'
+                  : 'border-border/50 bg-background/80 hover:bg-accent/50'
               }`}
             >
               <div className="flex items-start justify-between mb-2">

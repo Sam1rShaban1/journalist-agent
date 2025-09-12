@@ -33,15 +33,15 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
 
   if (isProcessing) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-background">
-        <div className="text-center space-y-4 animate-fade-in">
-          <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">The Newsdesk Crew is Working</h3>
-            <div className="space-y-1 text-sm text-newsroom-gray">
-              <p>🔍 The Investigator is researching sources...</p>
-              <p>✍️ The Correspondent is crafting the narrative...</p>
-              <p>✅ The Gatekeeper is fact-checking...</p>
+      <div className="flex-1 flex items-center justify-center">
+        <div className="text-center space-y-6 animate-fade-in">
+          <Loader2 className="h-16 w-16 animate-spin text-primary mx-auto animate-pulse-editorial" />
+          <div className="space-y-3">
+            <h3 className="text-xl font-semibold text-foreground">The Newsdesk Crew is Working</h3>
+            <div className="space-y-2 text-sm text-newsroom-gray">
+              <p className="animate-fade-in" style={{ animationDelay: '0.2s' }}>🔍 The Investigator is researching sources...</p>
+              <p className="animate-fade-in" style={{ animationDelay: '0.4s' }}>✍️ The Correspondent is crafting the narrative...</p>
+              <p className="animate-fade-in" style={{ animationDelay: '0.6s' }}>✅ The Gatekeeper is fact-checking...</p>
             </div>
           </div>
         </div>
@@ -50,9 +50,9 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col bg-background">
+    <div className="flex-1 flex flex-col">
       {/* Draft Header */}
-      <div className="border-b border-border px-6 py-3 bg-accent/30">
+      <div className="border-b border-border/50 px-6 py-4 bg-accent/30 rounded-t-2xl">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <FileText className="h-5 w-5 text-primary" />
@@ -63,7 +63,7 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
               variant="ghost"
               size="sm"
               onClick={handleSave}
-              className="text-newsroom-gray hover:text-foreground"
+              className="text-newsroom-gray hover:text-foreground rounded-xl"
             >
               <Save className="h-4 w-4 mr-1" />
               Save
@@ -72,7 +72,7 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
               variant="ghost"
               size="sm"
               onClick={handleExport}
-              className="text-newsroom-gray hover:text-foreground"
+              className="text-newsroom-gray hover:text-foreground rounded-xl"
             >
               <Download className="h-4 w-4 mr-1" />
               Export
@@ -84,18 +84,16 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
       {/* Draft Content */}
       <div className="flex-1 p-6">
         {content ? (
-          <Card className="h-full shadow-panel">
+          <div className="h-full p-6">
             <ScrollArea className="h-full">
-              <div className="p-6">
-                <textarea
-                  value={editableContent}
-                  onChange={(e) => setEditableContent(e.target.value)}
-                  className="w-full h-full min-h-[600px] resize-none border-none outline-none text-foreground text-base leading-relaxed font-mono bg-transparent"
-                  placeholder="Your story will appear here..."
-                />
-              </div>
+              <textarea
+                value={editableContent}
+                onChange={(e) => setEditableContent(e.target.value)}
+                className="w-full h-full min-h-[600px] resize-none border-none outline-none text-foreground text-base leading-relaxed font-mono bg-transparent rounded-xl p-4"
+                placeholder="Your story will appear here..."
+              />
             </ScrollArea>
-          </Card>
+          </div>
         ) : (
           <div className="h-full flex items-center justify-center">
             <div className="text-center space-y-4 text-newsroom-gray">

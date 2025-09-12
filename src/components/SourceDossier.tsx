@@ -1,4 +1,4 @@
-import { ExternalLink, FileText, Video, Database, Globe, CheckCircle, AlertCircle } from 'lucide-react';
+import { ExternalLink, FileText, Video, Database, Globe, CheckCircle, AlertCircle, PanelRightClose } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -13,9 +13,11 @@ interface Source {
 
 interface SourceDossierProps {
   sources: Source[];
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-export const SourceDossier = ({ sources }: SourceDossierProps) => {
+export const SourceDossier = ({ sources, isOpen, onToggle }: SourceDossierProps) => {
   const getSourceIcon = (type: Source['type']) => {
     switch (type) {
       case 'document':
@@ -80,11 +82,21 @@ export const SourceDossier = ({ sources }: SourceDossierProps) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-4 border-b border-border">
-        <h2 className="font-semibold text-foreground mb-2 flex items-center">
-          <CheckCircle className="h-5 w-5 mr-2 text-primary" />
-          Source Dossier
-        </h2>
+      <div className="p-6 border-b border-border/50">
+        <div className="flex items-center justify-between mb-2">
+          <h2 className="font-semibold text-foreground flex items-center">
+            <CheckCircle className="h-5 w-5 mr-2 text-primary" />
+            Source Dossier
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="p-2 hover:bg-accent rounded-xl transition-all duration-200"
+          >
+            <PanelRightClose className="h-4 w-4" />
+          </Button>
+        </div>
         <p className="text-sm text-newsroom-gray">
           Verified sources from The Investigator
         </p>
@@ -92,12 +104,12 @@ export const SourceDossier = ({ sources }: SourceDossierProps) => {
 
       {/* Sources List */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-3">
+        <div className="p-6 space-y-4">
           {sources.length > 0 ? (
             sources.map((source, index) => (
               <div
                 key={index}
-                className="p-4 border border-border rounded-lg bg-background hover:bg-accent/30 transition-colors"
+                className="p-5 border border-border/50 rounded-xl bg-background/80 hover:bg-accent/30 transition-all duration-300 hover-scale"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center space-x-2">
