@@ -19,6 +19,20 @@ export default {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        
+        /* Editorial Color System */
+        editorial: {
+          navy: "hsl(var(--editorial-navy))",
+          blue: "hsl(var(--editorial-blue))",
+          light: "hsl(var(--editorial-light))",
+        },
+        newsroom: {
+          dark: "hsl(var(--newsroom-dark))",
+          gray: "hsl(var(--newsroom-gray))",
+          light: "hsl(var(--newsroom-light))",
+          subtle: "hsl(var(--newsroom-subtle))",
+        },
+        
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
@@ -80,10 +94,51 @@ export default {
             height: "0",
           },
         },
+        "slide-in": {
+          from: {
+            transform: "translateX(-100%)",
+            opacity: "0",
+          },
+          to: {
+            transform: "translateX(0)",
+            opacity: "1",
+          },
+        },
+        "fade-in": {
+          from: {
+            opacity: "0",
+            transform: "translateY(10px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "pulse-editorial": {
+          "0%, 100%": {
+            boxShadow: "0 0 0 0 hsl(var(--primary) / 0.4)",
+          },
+          "50%": {
+            boxShadow: "0 0 0 8px hsl(var(--primary) / 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "slide-in": "slide-in 0.3s ease-out",
+        "fade-in": "fade-in 0.4s ease-out",
+        "pulse-editorial": "pulse-editorial 2s infinite",
+      },
+      boxShadow: {
+        'editorial': 'var(--shadow-editorial)',
+        'panel': 'var(--shadow-panel)',
+        'subtle': 'var(--shadow-subtle)',
+      },
+      backgroundImage: {
+        'gradient-editorial': 'var(--gradient-editorial)',
+        'gradient-subtle': 'var(--gradient-subtle)',
+        'gradient-sidebar': 'var(--gradient-sidebar)',
       },
     },
   },
