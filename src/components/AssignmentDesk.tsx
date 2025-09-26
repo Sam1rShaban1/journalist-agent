@@ -71,7 +71,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing }: AssignmentDeskProps)
             ) : (
               <>
                 <Play className="h-5 w-5 mr-2" />
-                Run The Beat
+                Investigate
               </>
             )}
           </Button>

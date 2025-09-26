@@ -5,6 +5,7 @@ import { StoryFiles } from './StoryFiles';
 import { SourceDossier } from './SourceDossier';
 import { PanelLeft, PanelRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { toast } from '@/components/ui/sonner';
 
 interface Source {
   url: string;
@@ -13,6 +14,13 @@ interface Source {
   verified?: boolean;
   credibilityScore?: number;
 }
+
+// Response shape from the FastAPI backend
+type ArticleResponse = {
+  language_detected: string;
+  article_draft: string;
+  sources?: Source[];
+};
 
 export const TheBeat = () => {
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(true);
@@ -23,57 +31,70 @@ export const TheBeat = () => {
 
   const handleRunBeat = async (query: string, selectedModel: string) => {
     setIsProcessing(true);
-    // Simulate the three-agent process
-    setTimeout(() => {
-      setCurrentDraft(`# Breaking: ${query}
+    setCurrentDraft("");
+    try {
+      // reserved for future use (e.g., if backend supports model selection)
+      void selectedModel;
 
-**By The Beat AI Crew** | *${new Date().toLocaleDateString()}*
+      const baseUrl = import.meta.env.VITE_BACKEND_URL as string | undefined;
+      if (!baseUrl) {
+        throw new Error('Missing VITE_BACKEND_URL environment variable. Create .env.local and set it to your ngrok base URL.');
+      }
 
-*This article was generated through our three-agent verification process: Research → Writing → Fact-checking*
+      const endpoint = `${baseUrl.replace(/\/$/, '')}/generate-article`;
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }),
+      });
 
-## Executive Summary
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`API error ${res.status}: ${text}`);
+      }
 
-Our investigative team has compiled a comprehensive analysis of "${query}" through extensive research and cross-verification of multiple sources.
+      const data: ArticleResponse = await res.json();
+      setCurrentDraft(data?.article_draft || '');
+      setSources(Array.isArray(data?.sources) ? data.sources : []);
 
-## Key Findings
-
-*[The Investigator's findings would appear here]*
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-
-## Background Context
-
-*[The Correspondent's narrative structure]*
-
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Verification Notes
-
-*[The Gatekeeper's editorial review]*
-
-All claims in this article have been cross-referenced against multiple sources. Key verification points include:
-
-- Source credibility assessment
-- Timeline consistency check
-- Cross-reference validation
-- Bias detection review
-
----
-
-*This draft is ready for your editorial review and enhancement.*`);
-
-      setSources([
-        { url: "https://example.com/source1", title: "Primary Source Document", type: "document" as const, verified: true, credibilityScore: 92 },
-        { url: "https://example.com/source2", title: "Expert Commentary", type: "article" as const, verified: true, credibilityScore: 88 },
-        { url: "https://example.com/source3", title: "Statistical Data", type: "data" as const, verified: true, credibilityScore: 95 },
-        { url: "https://example.com/source4", title: "Video Analysis", type: "video" as const, verified: false, credibilityScore: 75 },
-      ]);
+      toast.success('The crew finished the draft.');
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err?.message || 'Failed to run The Beat.');
+    } finally {
       setIsProcessing(false);
-    }, 3000);
+    }
   };
 
   return (
-    <div className="h-screen bg-gradient-subtle flex overflow-hidden p-4">
+    <div className="relative h-screen bg-gradient-subtle flex overflow-hidden p-4">
+      {/* Floating reopen buttons when sidebars are collapsed */}
+      {!leftSidebarOpen && (
+        <div className="absolute left-2 top-1/2 -translate-y-1/2 z-50">
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => setLeftSidebarOpen(true)}
+            aria-label="Open Story Files"
+            className="rounded-full shadow-md"
+          >
+            <PanelRight className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
+      {!rightSidebarOpen && (
+        <div className="absolute right-2 top-1/2 -translate-y-1/2 z-50">
+          <Button
+            variant="secondary"
+            size="icon"
+            onClick={() => setRightSidebarOpen(true)}
+            aria-label="Open Source Dossier"
+            className="rounded-full shadow-md"
+          >
+            <PanelLeft className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
       {/* Main Layout */}
       <div className="flex-1 flex gap-4 overflow-hidden">
         {/* Left Sidebar - Story Files */}
