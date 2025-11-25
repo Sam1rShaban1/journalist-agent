@@ -15,10 +15,24 @@ interface Source {
   credibilityScore?: number;
 }
 
+interface RunStats {
+  language: string;
+  promptTokens: number;
+  completionTokens: number;
+  totalTokens: number;
+  runtimeSeconds: number;
+  estimatedCostUsd: number;
+}
+
 // Response shape from the FastAPI backend
 type ArticleResponse = {
   language_detected: string;
   article_draft: string;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  crew_total_runtime_sec: number;
+  estimated_cost_usd: number;
   sources?: Source[];
 };
 
@@ -28,10 +42,12 @@ export const TheBeat = () => {
   const [currentDraft, setCurrentDraft] = useState("");
   const [sources, setSources] = useState<Source[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [runStats, setRunStats] = useState<RunStats | null>(null);
 
   const handleRunBeat = async (query: string, selectedModel: string) => {
     setIsProcessing(true);
     setCurrentDraft("");
+    setRunStats(null);
     try {
       // reserved for future use (e.g., if backend supports model selection)
       void selectedModel;
@@ -56,6 +72,14 @@ export const TheBeat = () => {
       const data: ArticleResponse = await res.json();
       setCurrentDraft(data?.article_draft || '');
       setSources(Array.isArray(data?.sources) ? data.sources : []);
+      setRunStats({
+        language: data.language_detected,
+        promptTokens: data.prompt_tokens ?? 0,
+        completionTokens: data.completion_tokens ?? 0,
+        totalTokens: data.total_tokens ?? 0,
+        runtimeSeconds: data.crew_total_runtime_sec ?? 0,
+        estimatedCostUsd: data.estimated_cost_usd ?? 0,
+      });
 
       toast.success('The crew finished the draft.');
     } catch (err: any) {
@@ -116,7 +140,7 @@ export const TheBeat = () => {
           {/* Floating Bottom Bar inside center stage */}
           <div className="absolute bottom-4 left-4 right-4">
             <div className="bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm">
-              <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} />
+              <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} runStats={runStats} />
             </div>
           </div>
         </div>
