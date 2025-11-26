@@ -132,8 +132,18 @@ export const TheBeat = () => {
         </div>
 
         {/* Center - Draft Board with Floating Bottom Bar */}
-        <div className="flex-1 relative">
-          <div className="h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm overflow-hidden">
+        <div className="flex-1 relative flex flex-col space-y-4">
+          {/* Temporary Markdown Input */}
+          <div className="bg-background/80 rounded-2xl p-4 border border-dashed border-border/50">
+            <h3 className="text-sm font-medium mb-2 text-foreground/80">Temporary Markdown Input</h3>
+            <textarea
+              className="w-full h-40 p-3 text-sm rounded-lg border border-border/50 bg-background/50 font-mono"
+              placeholder="Paste or type markdown here to preview below..."
+              value={currentDraft}
+              onChange={(e) => setCurrentDraft(e.target.value)}
+            />
+          </div>
+          <div className="flex-1 h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm overflow-hidden">
             <DraftBoard content={currentDraft} isProcessing={isProcessing} />
           </div>
           
