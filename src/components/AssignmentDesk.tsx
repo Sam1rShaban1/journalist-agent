@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Play, Loader2, GaugeCircle, Coins } from 'lucide-react';
 
 interface AssignmentDeskProps {
-  onRunBeat: (query: string, model: string) => void;
+  onRunBriefing: (query: string, model: string) => void;
   isProcessing: boolean;
   runStats?: {
     language: string;
@@ -17,14 +17,14 @@ interface AssignmentDeskProps {
   } | null;
 }
 
-export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: AssignmentDeskProps) => {
+export const AssignmentDesk = ({ onRunBriefing, isProcessing, runStats }: AssignmentDeskProps) => {
   const [query, setQuery] = useState('');
   const [selectedModel, setSelectedModel] = useState('gemini-2.5-flash');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim() && !isProcessing) {
-      onRunBeat(query.trim(), selectedModel);
+      onRunBriefing(query.trim(), selectedModel);
     }
   };
 
@@ -59,7 +59,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: Assignment
           <Input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="What's the story you're breaking?"
+            placeholder="Enter assignment brief"
             className="bg-accent/30 border-border/50 text-lg py-6 px-4 placeholder:text-newsroom-gray focus:border-primary transition-all duration-300 rounded-xl"
             disabled={isProcessing}
           />
@@ -74,12 +74,12 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: Assignment
           {isProcessing ? (
             <>
               <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-              Running The Beat
+              Preparing briefing
             </>
           ) : (
             <>
               <Play className="h-5 w-5 mr-2" />
-              Investigate
+              Run Briefing
             </>
           )}
         </Button>
@@ -88,7 +88,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: Assignment
       {runStats && !isProcessing && (
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
           <div className="p-3 rounded-xl border border-border/60 bg-accent/20">
-            <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Tokens</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Token Usage</p>
             <p className="text-base font-semibold text-foreground">
               {runStats.totalTokens.toLocaleString()}
             </p>
@@ -99,7 +99,7 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: Assignment
           <div className="p-3 rounded-xl border border-border/60 bg-accent/20 flex items-center gap-3">
             <GaugeCircle className="h-8 w-8 text-primary" />
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Runtime</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Processing Time</p>
               <p className="text-base font-semibold text-foreground">
                 {runStats.runtimeSeconds.toFixed(1)}s
               </p>
@@ -109,11 +109,11 @@ export const AssignmentDesk = ({ onRunBeat, isProcessing, runStats }: Assignment
           <div className="p-3 rounded-xl border border-border/60 bg-accent/20 flex items-center gap-3">
             <Coins className="h-8 w-8 text-secondary" />
             <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Estimated Cost</p>
+              <p className="text-xs uppercase tracking-[0.2em] text-newsroom-gray">Cost Estimate</p>
               <p className="text-base font-semibold text-foreground">
                 ${runStats.estimatedCostUsd.toFixed(4)}
               </p>
-              <p className="text-xs text-newsroom-gray">Per crew run</p>
+              <p className="text-xs text-newsroom-gray">Per submission</p>
             </div>
           </div>
         </div>

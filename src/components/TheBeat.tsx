@@ -3,6 +3,8 @@ import { DraftBoard } from './DraftBoard';
 import { AssignmentDesk } from './AssignmentDesk';
 import { StoryFiles } from './StoryFiles';
 import { SourceDossier } from './SourceDossier';
+import { ThemeToggle } from './ThemeToggle';
+
 import { PanelLeft, PanelRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/sonner';
@@ -46,7 +48,7 @@ export const TheBeat = () => {
   const [runStats, setRunStats] = useState<RunStats | null>(null);
   const [isAssignmentDeskVisible, setAssignmentDeskVisible] = useState(true);
 
-  const handleRunBeat = async (query: string, selectedModel: string) => {
+  const handleRunBriefing = async (query: string, selectedModel: string) => {
     setIsProcessing(true);
     setCurrentDraft("");
     setRunStats(null);
@@ -85,10 +87,10 @@ export const TheBeat = () => {
       });
       setAssignmentDeskVisible(false);
 
-      toast.success('The crew finished the draft.');
+      toast.success('Briefing complete. Draft board updated.');
     } catch (err: any) {
       console.error(err);
-      toast.error(err?.message || 'Failed to run The Beat.');
+      toast.error(err?.message || 'Briefing request failed.');
     } finally {
       setIsProcessing(false);
     }
@@ -113,7 +115,11 @@ export const TheBeat = () => {
   );
 
   return (
-    <div className="relative h-screen bg-gradient-subtle flex overflow-hidden p-4">
+    <div className="relative min-h-screen bg-gradient-subtle flex overflow-hidden p-4">
+      <div className="absolute top-4 right-4 z-50 flex items-center gap-2 rounded-full border border-border/60 bg-background/90 px-3 py-1 shadow-subtle">
+        <span className="text-xs font-medium text-newsroom-gray">Appearance</span>
+        <ThemeToggle />
+      </div>
       {/* Floating reopen buttons when sidebars are collapsed */}
       {!leftSidebarOpen && (
         <div className="absolute left-2 top-1/2 -translate-y-1/2 z-50">
@@ -183,7 +189,7 @@ export const TheBeat = () => {
             )}
           >
             <div className="bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm">
-              <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} runStats={runStats} />
+              <AssignmentDesk onRunBriefing={handleRunBriefing} isProcessing={isProcessing} runStats={runStats} />
             </div>
           </div>
         </div>
