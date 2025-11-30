@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { DraftBoard } from './DraftBoard';
 import { AssignmentDesk } from './AssignmentDesk';
 import { StoryFiles } from './StoryFiles';
@@ -6,6 +6,7 @@ import { SourceDossier } from './SourceDossier';
 import { PanelLeft, PanelRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/sonner';
+import { cn } from '@/lib/utils';
 
 interface Source {
   url: string;
@@ -43,11 +44,13 @@ export const TheBeat = () => {
   const [sources, setSources] = useState<Source[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [runStats, setRunStats] = useState<RunStats | null>(null);
+  const [isAssignmentDeskVisible, setAssignmentDeskVisible] = useState(true);
 
   const handleRunBeat = async (query: string, selectedModel: string) => {
     setIsProcessing(true);
     setCurrentDraft("");
     setRunStats(null);
+    setAssignmentDeskVisible(true);
     try {
       // reserved for future use (e.g., if backend supports model selection)
       void selectedModel;
@@ -80,6 +83,7 @@ export const TheBeat = () => {
         runtimeSeconds: data.crew_total_runtime_sec ?? 0,
         estimatedCostUsd: data.estimated_cost_usd ?? 0,
       });
+      setAssignmentDeskVisible(false);
 
       toast.success('The crew finished the draft.');
     } catch (err: any) {
@@ -89,6 +93,24 @@ export const TheBeat = () => {
       setIsProcessing(false);
     }
   };
+
+  const hasDraftContent = currentDraft.trim().length > 0;
+  const canAutoHideAssignmentDesk = !isProcessing && hasDraftContent;
+  const assignmentDeskShouldHide = canAutoHideAssignmentDesk && !isAssignmentDeskVisible;
+
+  const handleDraftScroll = useCallback(
+    ({ direction, scrollTop }: { direction: 'up' | 'down'; scrollTop: number }) => {
+      if (!canAutoHideAssignmentDesk) {
+        return;
+      }
+      if (direction === 'down' && scrollTop > 80) {
+        setAssignmentDeskVisible(false);
+      } else if (direction === 'up') {
+        setAssignmentDeskVisible(true);
+      }
+    },
+    [canAutoHideAssignmentDesk]
+  );
 
   return (
     <div className="relative h-screen bg-gradient-subtle flex overflow-hidden p-4">
@@ -124,9 +146,9 @@ export const TheBeat = () => {
         {/* Left Sidebar - Story Files */}
         <div className={`${leftSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-500 ease-out overflow-hidden`}>
           <div className="h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm animate-fade-in">
-            <StoryFiles 
-              isOpen={leftSidebarOpen} 
-              onToggle={() => setLeftSidebarOpen(!leftSidebarOpen)} 
+            <StoryFiles
+              isOpen={leftSidebarOpen}
+              onToggle={() => setLeftSidebarOpen(!leftSidebarOpen)}
             />
           </div>
         </div>
@@ -144,11 +166,22 @@ export const TheBeat = () => {
             />
           </div>
           <div className="flex-1 h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm overflow-hidden">
-            <DraftBoard content={currentDraft} isProcessing={isProcessing} />
+            <DraftBoard
+              content={currentDraft}
+              isProcessing={isProcessing}
+              onViewportScroll={handleDraftScroll}
+            />
           </div>
-          
+
           {/* Floating Bottom Bar inside center stage */}
-          <div className="absolute bottom-4 left-4 right-4">
+          <div
+            className={cn(
+              'absolute bottom-4 left-4 right-4 transition-all duration-300 ease-out',
+              assignmentDeskShouldHide
+                ? 'translate-y-[calc(100%+1rem)] opacity-0 pointer-events-none'
+                : 'translate-y-0 opacity-100 pointer-events-auto'
+            )}
+          >
             <div className="bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm">
               <AssignmentDesk onRunBeat={handleRunBeat} isProcessing={isProcessing} runStats={runStats} />
             </div>
@@ -158,10 +191,10 @@ export const TheBeat = () => {
         {/* Right Sidebar - Source Dossier */}
         <div className={`${rightSidebarOpen ? 'w-80' : 'w-0'} transition-all duration-500 ease-out overflow-hidden`}>
           <div className="h-full bg-background rounded-2xl shadow-panel border border-border/50 backdrop-blur-sm animate-fade-in">
-            <SourceDossier 
-              sources={sources} 
-              isOpen={rightSidebarOpen} 
-              onToggle={() => setRightSidebarOpen(!rightSidebarOpen)} 
+            <SourceDossier
+              sources={sources}
+              isOpen={rightSidebarOpen}
+              onToggle={() => setRightSidebarOpen(!rightSidebarOpen)}
             />
           </div>
         </div>

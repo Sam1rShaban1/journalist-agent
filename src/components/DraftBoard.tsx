@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, type ComponentPropsWithoutRef } from 'react';
+import { useState, useEffect, useMemo, useRef, type ComponentPropsWithoutRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader2, FileText, Save, Download, Eye, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import remarkBreaks from 'remark-breaks';
 interface DraftBoardProps {
   content: string;
   isProcessing: boolean;
+  onViewportScroll?: (details: { direction: 'up' | 'down'; scrollTop: number }) => void;
 }
 
 type CodeProps = ComponentPropsWithoutRef<'code'> & {
@@ -92,12 +93,13 @@ const statusSteps = [
   },
 ];
 
-export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
+export const DraftBoard = ({ content, isProcessing, onViewportScroll }: DraftBoardProps) => {
   const [editableContent, setEditableContent] = useState(content);
   // State to toggle between editing and preview modes
   const [isEditing, setIsEditing] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const hasContent = Boolean(editableContent.trim().length);
+  const lastScrollTopRef = useRef(0);
 
   useEffect(() => {
     setEditableContent(content);
@@ -144,6 +146,18 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
     return new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' }).format(new Date());
   }, [editableContent]);
   const progress = ((activeStep + 1) / statusSteps.length) * 100;
+
+  const handleViewportScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    if (!onViewportScroll) return;
+    const currentScrollTop = event.currentTarget.scrollTop;
+    const lastScrollTop = lastScrollTopRef.current;
+    if (Math.abs(currentScrollTop - lastScrollTop) < 2) {
+      return;
+    }
+    const direction = currentScrollTop > lastScrollTop ? 'down' : 'up';
+    lastScrollTopRef.current = currentScrollTop;
+    onViewportScroll({ direction, scrollTop: currentScrollTop });
+  };
 
   const handleSave = () => {
     // Save functionality would go here
@@ -313,7 +327,7 @@ export const DraftBoard = ({ content, isProcessing }: DraftBoardProps) => {
 
         <div className="flex-1 overflow-hidden">
           {hasContent ? (
-            <ScrollArea className="h-full">
+            <ScrollArea className="h-full" onViewportScroll={handleViewportScroll}>
               <div className="p-8 space-y-6">
                 <div className="grid gap-4 md:grid-cols-3">
                   {[{
